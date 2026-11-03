@@ -1,58 +1,44 @@
-# Node.js Application Deployment with Docker & GitHub Actions
+# Node.js Application Deployment | Docker & GitHub Actions
 
-A practical deployment project demonstrating how to containerize a Node.js application and automate its deployment using GitHub Actions.
+A hands-on DevOps project focused on containerizing a Node.js application and automating its deployment to a Linux server using GitHub Actions.
 
-The objective is to establish a repeatable deployment workflow: changes are pushed to GitHub, the CI/CD pipeline is triggered, and the application is rebuilt and deployed on a Linux server.
+The project brings together application packaging, Linux server administration, Docker Compose and CI/CD to demonstrate a practical application deployment workflow.
 
-## Overview
+## Project Overview
 
-This project brings together a few essential DevOps practices:
+The application is built using Node.js and Express, packaged into a Docker container, and deployed using Docker Compose.
 
-- **Node.js & Express** — application runtime and web framework.
-- **Docker** — packages the application and its dependencies into a container.
-- **Docker Compose** — simplifies container configuration and lifecycle management.
-- **GitHub Actions** — automates the deployment workflow whenever changes are pushed to the main branch.
-- **Linux** — provides the environment for running and managing the application.
+GitHub Actions automates the deployment process. When changes are pushed to the `main` branch, the configured workflow connects to the Linux deployment server over SSH, retrieves the latest code and rebuilds the application.
 
 ## Architecture
 
-The intended deployment workflow is illustrated below.
+<img width="1373" height="647" alt="image" src="https://github.com/user-attachments/assets/4a033214-bddb-4f11-a679-3f93b83a7fa5" />
 
-```mermaid
-flowchart TD
-    A["Developer"] -->|"Pushes code"| B["GitHub Repository"]
-    B -->|"Push event on main"| C["GitHub Actions"]
-    C --> D["Deployment Job"]
-    D -->|"SSH connection"| E["Linux Server"]
-    E --> F["Git Pull"]
-    F --> G["Docker Compose"]
-    G --> H["Build / Update Container"]
-    H --> I["Running Node.js Application"]
-    I --> J["Application Endpoint"]
+## Technology Stack
 
-    style A fill:#263445,color:#fff,stroke:#64748b
-    style B fill:#263445,color:#fff,stroke:#64748b
-    style C fill:#1d4ed8,color:#fff,stroke:#60a5fa
-    style D fill:#1d4ed8,color:#fff,stroke:#60a5fa
-    style E fill:#334155,color:#fff,stroke:#94a3b8
-    style G fill:#0f766e,color:#fff,stroke:#2dd4bf
-    style I fill:#166534,color:#fff,stroke:#4ade80
-```
+| Technology | Purpose |
+|---|---|
+| Node.js | Application runtime |
+| Express.js | Web application framework |
+| Docker | Application containerization |
+| Docker Compose | Container lifecycle management |
+| Linux (RHEL) | Deployment environment |
+| Git & GitHub | Source code management |
+| GitHub Actions | CI/CD automation |
+| SSH | Secure remote server access |
 
 ## Deployment Workflow
 
-The deployment process is designed around the following sequence:
+The deployment process follows these stages:
 
-1. Application code is maintained in a GitHub repository.
-2. A push to the `main` branch triggers the GitHub Actions workflow.
-3. The workflow connects to the deployment server over SSH.
-4. The latest application changes are retrieved from the repository.
-5. Docker Compose rebuilds the application image and starts the updated container.
-6. The updated application becomes available through its configured endpoint.
+1. **Development:** Application code is maintained in the GitHub repository.
+2. **Trigger:** A push to the `main` branch triggers the GitHub Actions workflow.
+3. **Authentication:** The workflow establishes an SSH connection to the deployment server using configured GitHub Secrets.
+4. **Code Synchronization:** The server retrieves the latest version of the application.
+5. **Build & Deployment:** Docker Compose rebuilds the application image and starts the updated container.
+6. **Execution:** The Node.js application runs inside the deployed container.
 
-SSH credentials are supplied through GitHub Actions Secrets rather than being stored in the repository.
-
-## Project Structure
+## Repository Structure
 
 ```text
 nodejs-application-deploy/
@@ -69,21 +55,20 @@ nodejs-application-deploy/
 └── README.md
 ```
 
-## Running the Application Locally
+## Running Locally
 
 ### Prerequisites
 
-- Node.js
-- npm
+- Node.js and npm
 - Docker Engine
 - Docker Compose
 
-### Option 1: Run directly with Node.js
+### Run without Docker
 
 Clone the repository:
 
 ```bash
-git clone <YOUR_REPOSITORY_URL>
+git clone [<YOUR_REPOSITORY_URL>](https://github.com/vedopatil/nodejs-application-deploy-github-actions)
 cd nodejs-application-deploy
 ```
 
@@ -94,7 +79,7 @@ npm install
 npm start
 ```
 
-### Option 2: Run using Docker Compose
+### Run with Docker Compose
 
 Build and start the application:
 
@@ -102,7 +87,7 @@ Build and start the application:
 docker compose up -d --build
 ```
 
-Check running containers:
+Check container status:
 
 ```bash
 docker compose ps
@@ -122,34 +107,36 @@ docker compose down
 
 ## CI/CD Configuration
 
-The GitHub Actions workflow is configured to trigger on pushes to the `main` branch.
+The GitHub Actions workflow is configured to respond to pushes to the `main` branch.
 
-The deployment process uses SSH authentication to connect to the target Linux server.
+Deployment credentials are managed through GitHub Actions Secrets:
 
-The following repository secrets are required:
-
-| Secret | Purpose |
+| Secret | Description |
 |---|---|
-| `SSH_HOST` | Public IP address or hostname of the server |
-| `SSH_KEY` | Private SSH key used by the deployment workflow |
+| `SSH_HOST` | Deployment server address |
+| `SSH_KEY` | Private SSH key for authentication |
 
-The corresponding public key must be configured in the deployment user's `authorized_keys` file on the server.
+The corresponding public key is configured on the deployment server to allow SSH authentication.
 
-## Security Considerations
+## Security Practices
 
-- Private SSH keys are stored in GitHub Actions Secrets.
-- Private credentials are not committed to the repository.
-- Deployment should use a dedicated, non-root Linux account.
-- Server access should be restricted to the required ports and services.
+- SSH private keys are kept outside the source repository.
+- GitHub Actions Secrets are used for deployment credentials.
+- Remote deployment uses SSH authentication.
+- A dedicated Linux user is preferred over direct root access.
 
-## What This Project Demonstrates
+## Key Takeaways
 
-This project provides practical exposure to:
+This project provided practical experience with:
 
-- Linux server administration.
-- Git-based source code management.
-- Containerization using Docker.
-- Application deployment using Docker Compose.
-- CI/CD pipeline configuration with GitHub Actions.
-- SSH-based remote deployment.
-- Basic application and container management.
+- Packaging a Node.js application using Docker.
+- Managing application containers with Docker Compose.
+- Working with a Linux-based deployment server.
+- Configuring SSH-based remote access.
+- Automating deployment workflows using GitHub Actions.
+- Managing deployment credentials through GitHub Secrets.
+
+---
+
+**Author:** Vedant Patil  
+**Repository:** (https://github.com/vedopatil/nodejs-application-deploy-github-actions)
