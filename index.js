@@ -5,7 +5,7 @@ const PORT = process.eventNames.PORT ?? 8080
 
 app.get('/', (req, res) => {
     return res.json({
-        msg: "Hello fromt the server"
+        msg: "Hello fromt the server v1"
     })
 })
 
